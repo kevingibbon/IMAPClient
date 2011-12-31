@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9040671214A3C7540061CC60 /* imap.h in Headers */ = {isa = PBXBuildFile; fileRef = 9040671014A3C7540061CC60 /* imap.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9040671314A3C7540061CC60 /* imap.m in Sources */ = {isa = PBXBuildFile; fileRef = 9040671114A3C7540061CC60 /* imap.m */; };
+		9076A27F14AEBBA100BD60CE /* imap.h in Headers */ = {isa = PBXBuildFile; fileRef = 9076A27E14AEBBA100BD60CE /* imap.h */; };
+		9076A28114AEBBB200BD60CE /* imap.m in Sources */ = {isa = PBXBuildFile; fileRef = 9076A28014AEBBB200BD60CE /* imap.m */; };
 		AA747D9F0F9514B9006C5449 /* IMAP_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* IMAP_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9040671014A3C7540061CC60 /* imap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imap.h; sourceTree = "<group>"; };
-		9040671114A3C7540061CC60 /* imap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = imap.m; sourceTree = "<group>"; };
 		9076A26A14AEB58600BD60CE /* imap.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = imap.podspec; sourceTree = "<group>"; };
-		9076A26B14AEB69200BD60CE /* README.textile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.textile; sourceTree = "<group>"; };
+		9076A27E14AEBBA100BD60CE /* imap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imap.h; path = Classes/imap.h; sourceTree = "<group>"; };
+		9076A28014AEBBB200BD60CE /* imap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = imap.m; path = Classes/imap.m; sourceTree = "<group>"; };
+		9076A28214AEBBC200BD60CE /* README.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* IMAP_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMAP_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libIMAP.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libIMAP.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,14 +46,12 @@
 		0867D691FE84028FC02AAC07 /* IMAP */ = {
 			isa = PBXGroup;
 			children = (
+				9076A28214AEBBC200BD60CE /* README.markdown */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
-				9040671014A3C7540061CC60 /* imap.h */,
-				9040671114A3C7540061CC60 /* imap.m */,
 				9076A26A14AEB58600BD60CE /* imap.podspec */,
-				9076A26B14AEB69200BD60CE /* README.textile */,
 			);
 			name = IMAP;
 			sourceTree = "<group>";
@@ -69,6 +67,8 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				9076A28014AEBBB200BD60CE /* imap.m */,
+				9076A27E14AEBBA100BD60CE /* imap.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -89,7 +89,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA747D9F0F9514B9006C5449 /* IMAP_Prefix.pch in Headers */,
-				9040671214A3C7540061CC60 /* imap.h in Headers */,
+				9076A27F14AEBBA100BD60CE /* imap.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,7 +143,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9040671314A3C7540061CC60 /* imap.m in Sources */,
+				9076A28114AEBBB200BD60CE /* imap.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
