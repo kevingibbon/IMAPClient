@@ -7,9 +7,9 @@
 //
 
 @interface IMAP : NSObject <NSStreamDelegate> {
-    NSString *host;
+	NSString *host;
 	int port;
-
+	
 	NSMutableString *_response;
 	int _commandCount;
 	unsigned int _readSize;	
@@ -19,10 +19,10 @@
 	
 	void (^_connectedCallback)(bool connected);
 	void (^_parsingBlock)();
-    NSInputStream *_inputStream;
-    NSOutputStream *_outputStream;
+	NSInputStream *_inputStream;
+	NSOutputStream *_outputStream;
 	NSArray *_uidCommands;
-
+	
 }
 
 - (IMAP*) initWithUseUID: (bool)useUID;
