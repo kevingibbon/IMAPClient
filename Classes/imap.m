@@ -34,6 +34,7 @@
 	_uidCommands = [[NSArray alloc] initWithObjects: 
 		@"FETCH",
 		@"SEARCH",
+		@"UIDCOMMAND",
 		nil
 	];
 }
@@ -89,40 +90,58 @@
 
 - (void)handleInputStreamEvent:(NSStreamEvent)eventCode {
 	switch (eventCode) {
-		case NSStreamEventHasBytesAvailable:
+		case NSStreamEventHasBytesAvailable: {
 			[self readBytes];
 			break;
-		case NSStreamEventOpenCompleted:
+		}
+		case NSStreamEventOpenCompleted: {
 			if (!_inputStreamReady) {
 				_inputStreamReady = TRUE;
 				if (_outputStreamReady && _inputStreamReady) {
-					[self connected];
+					_connectedCallback(TRUE, NULL);
+					[_connectedCallback release];
 				}
 			}
+			break;
+		}
+		case NSStreamEventErrorOccurred: {
+			NSError *error = [_inputStream streamError];
+			_connectedCallback(FALSE, error);
+			[_connectedCallback release];
+			break;
+		}
 		default:
-		case NSStreamEventErrorOccurred:
 			break;
 	}
 }
 
 - (void)handleOutputStreamEvent:(NSStreamEvent)eventCode; {
 	switch (eventCode) {
-		case NSStreamEventHasBytesAvailable:
-			[self readBytes];
+		case NSStreamEventHasBytesAvailable: {
 			break;
-		case NSStreamEventHasSpaceAvailable:
-		{
-			if (!_outputStreamReady) {
-				_outputStreamReady = TRUE;
-				if (_outputStreamReady && _inputStreamReady) {
-					[self connected];
+		}
+		case NSStreamEventHasSpaceAvailable: {
+			{
+				if (!_outputStreamReady) {
+					_outputStreamReady = TRUE;
+					if (_outputStreamReady && _inputStreamReady) {
+						_connectedCallback(TRUE, NULL);
+						[_connectedCallback release];
+					}
 				}
 			}
-		}
-		case NSStreamEventOpenCompleted:
 			break;
+		}
+		case NSStreamEventOpenCompleted: {
+			break;
+		}
+		case NSStreamEventErrorOccurred: {
+			NSError *error = [_outputStream streamError];
+			_connectedCallback(FALSE, error);
+			[_connectedCallback release];
+			break;
+		}
 		default:
-		case NSStreamEventErrorOccurred:
 			break;
 	}
 }
@@ -138,77 +157,54 @@
 	}
 }
 
-- (void)connect: (NSString*) h port: (int) p callback: (void(^)(bool))handler {
+- (void)connect: (NSString*) h port: (int) p callback: (void(^)(bool, NSError*))handler {
 	host = h;
 	port = p;
 	_connectedCallback = [handler copy];
 	[self open];
 }
 
-- (void)connected {
-	_connectedCallback(TRUE);
-    [_connectedCallback release];
-}
-
-- (void)login: (NSString*) username password: (NSString*) password callback: (void(^)(bool)) handler {
+- (void)login: (NSString*) username password: (NSString*) password callback: (void(^)(NSString*)) handler {
 	NSString *command = [NSString stringWithFormat: @"LOGIN %@ %@", username, password];
-	[_response setString: @""];
-	void (^_handler)(bool connected) = [handler copy];
-
-	[self setParsingBlock: ^{
-		if([_response rangeOfString:@"\r\n" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-			_handler(TRUE);
-			[_handler release];
-		}
-	}];
-	
-	[self runCommand: command commandName: @"LOGIN"];
+	[self command: command commandName: @"LOGIN" callback: handler];
 }
 
-- (void)select: (NSString*) mailbox callback: (void(^)(bool)) handler {
+- (void)select: (NSString*) mailbox callback: (void(^)(NSString*)) handler {
 	NSString *command = [NSString stringWithFormat: @"SELECT \"%@\"", mailbox];
-	[_response setString: @""];
-	void (^_handler)(bool connected) = [handler copy];
-	[self setParsingBlock: ^{
-		if([_response rangeOfString:@"\r\n" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-			_handler(TRUE);
-			[_handler release];
-		}
-	}];
-	
-	[self runCommand: command commandName: @"SELECT"];
+	[self command: command commandName: @"SELECT" callback: handler];
 }
 
 - (void)fetch: (NSString*) ids fields: (NSString*) fields callback: (void(^)(NSString*)) handler {
 	NSString *command = [NSString stringWithFormat: @"FETCH %@ %@", ids, fields];
-	
-	[_response setString: @""];
-	void (^_handler)(NSString* message) = [handler copy];
-	
-	[self setParsingBlock: ^{
-		if([_response rangeOfString:@"\r\n" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-			_handler(_response);
-			[_handler release];
-		}
-	}];
-	
-	[self runCommand: command commandName: @"FETCH"];
+	[self command: command commandName: @"FETCH" callback: handler];
 }
 
 - (void)search: (NSString*) query callback: (void(^)(NSString*)) handler {
 	NSString *command = [NSString stringWithFormat: @"SEARCH %@", query];
-	
+	[self command: command commandName: @"SEARCH" callback: handler];
+}
+
+- (void)command: (NSString*) command callback: (void(^)(NSString*)) handler {
+	[self command: command commandName: @"COMMAND" callback: handler];
+}
+
+- (void)uid: (NSString*) command callback: (void(^)(NSString*)) handler {
+	[self command: command commandName: @"UIDCOMMAND" callback: handler];
+}
+
+- (void)command: (NSString*) command commandName: (NSString*)commandName callback: (void(^)(NSString*)) handler {
 	[_response setString: @""];
+	
 	void (^_handler)(NSString* message) = [handler copy];
 	
 	[self setParsingBlock: ^{
 		if([_response rangeOfString:@"\r\n" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-			_handler(_response);
+			_handler([NSString stringWithFormat: @"%@", _response]);
 			[_handler release];
 		}
 	}];
 	
-	[self runCommand: command commandName: @"SEARCH"];
+	[self runCommand: command commandName: commandName];
 }
 
 - (void)setParsingBlock: (void(^)()) block {
@@ -231,10 +227,10 @@
 }
 
 -(void)dealloc {
-	[_response release];
 	if (_parsingBlock) {
 		[_parsingBlock release];
 	}
+	[_response release];
 	[_inputStream release];
 	[_outputStream release];
 	[_uidCommands release];

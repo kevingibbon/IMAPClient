@@ -14,7 +14,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9076A26A14AEB58600BD60CE /* imap.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = imap.podspec; sourceTree = "<group>"; };
 		9076A27E14AEBBA100BD60CE /* imap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imap.h; path = Classes/imap.h; sourceTree = "<group>"; };
 		9076A28014AEBBB200BD60CE /* imap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = imap.m; path = Classes/imap.m; sourceTree = "<group>"; };
 		9076A28214AEBBC200BD60CE /* README.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; };
@@ -51,7 +50,6 @@
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
-				9076A26A14AEB58600BD60CE /* imap.podspec */,
 			);
 			name = IMAP;
 			sourceTree = "<group>";
